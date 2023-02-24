@@ -387,6 +387,7 @@ Here are all the inputs available through `with`:
 
 | Input               | Description                                                                                                                                          | Default | Required |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------- |
+| `pat`               | Personal access token for writing secrets. This is necessary if using exportGitHubSecrets.                                                           |         |          |
 | `url`               | The URL for the vault endpoint                                                                                                                       |         | ✔        |
 | `secrets`           | A semicolon-separated list of secrets to retrieve. These will automatically be converted to environmental variable keys. See README for more details |         |          |
 | `namespace`         | The Vault namespace from which to query secrets. Vault Enterprise only, unset by default                                                             |         |          |
@@ -405,6 +406,7 @@ Here are all the inputs available through `with`:
 | `authPayload`       | The JSON payload to be sent to Vault when using a custom authentication method.                                                                      |         |          |
 | `extraHeaders`      | A string of newline separated extra headers to include on every request.                                                                             |         |          |
 | `exportEnv`         | Whether or not export secrets as environment variables.                                                                                              | `true`  |          |
+| `exportGitHubSecrets`| Whether or not export secrets as GitHub Secrets.                                                                                                    | `true`  |          |
 | `exportToken`       | Whether or not export Vault token as environment variables (i.e VAULT_TOKEN).                                                                        | `false` |          |
 | `caCertificate`     | Base64 encoded CA certificate the server certificate was signed with.                                                                                |         |          |
 | `clientCertificate` | Base64 encoded client certificate the action uses to authenticate with Vault when mTLS is enabled.                                                   |         |          |

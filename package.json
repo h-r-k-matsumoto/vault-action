@@ -34,9 +34,11 @@
     },
     "homepage": "https://github.com/hashicorp/vault-action#readme",
     "dependencies": {
+        "@actions/github": "^5.1.1",
         "got": "^11.8.5",
         "jsonata": "^1.8.6",
-        "jsrsasign": "^10.6.1"
+        "jsrsasign": "^10.6.1",
+        "libsodium-wrappers": "^0.7.11"
     },
     "peerDependencies": {
         "@actions/core": ">=1 <2"

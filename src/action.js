@@ -3,16 +3,18 @@ const core = require('@actions/core');
 const command = require('@actions/core/lib/command');
 const got = require('got').default;
 const jsonata = require('jsonata');
-const { auth: { retrieveToken }, secrets: { getSecrets } } = require('./index');
+const { auth: { retrieveToken }, secrets: { getSecrets }, ghsecrets: {exportGitHubSecret} } = require('./index');
 
 const AUTH_METHODS = ['approle', 'token', 'github', 'jwt', 'kubernetes'];
 const ENCODING_TYPES = ['base64', 'hex', 'utf8'];
 
 async function exportSecrets() {
+    const pat = core.getInput('pat', { required: true });
     const vaultUrl = core.getInput('url', { required: true });
     const vaultNamespace = core.getInput('namespace', { required: false });
     const extraHeaders = parseHeadersInput('extraHeaders', { required: false });
     const exportEnv = core.getInput('exportEnv', { required: false }) != 'false';
+    const exportGitHubSecrets = core.getInput('exportGitHubSecrets', { required: false }) != 'false';
     const exportToken = (core.getInput('exportToken', { required: false }) || 'false').toLowerCase() != 'false';
 
     const secretsInput = core.getInput('secrets', { required: false });
@@ -108,6 +110,10 @@ async function exportSecrets() {
         }
         if (exportEnv) {
             core.exportVariable(request.envVarName, `${value}`);
+        }
+
+        if (exportGitHubSecrets){
+            exportGitHubSecret(pat,request.envVarName, `${value}`);
         }
         core.setOutput(request.outputVarName, `${value}`);
         core.debug(`✔ ${request.path} => outputs.${request.outputVarName}${exportEnv ? ` | env.${request.envVarName}` : ''}`);
