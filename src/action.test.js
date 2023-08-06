@@ -1,6 +1,7 @@
 jest.mock('got');
 jest.mock('@actions/core');
 jest.mock('@actions/core/lib/command');
+jest.mock('./ghsecrets');
 
 const command = require('@actions/core/lib/command');
 const core = require('@actions/core');
@@ -10,6 +11,7 @@ const {
     parseSecretsInput,
     parseHeadersInput
 } = require('./action');
+const ghsecrets= require('./ghsecrets');
 
 const { when } = require('jest-when');
 
@@ -335,6 +337,7 @@ describe('exportSecrets', () => {
 
         expect(core.exportVariable).toBeCalledWith('KEY__VALUE', '1');
         expect(core.setOutput).toBeCalledWith('key__value', '1');
+        core.Secre
     });
 
     it('export Vault token', async () => {
@@ -444,4 +447,25 @@ with blank lines
     expect(core.setOutput).toBeCalledTimes(1);
     expect(core.setOutput).toBeCalledWith('vault_token', 'EXAMPLE');
   })
+  function mockExportGitHubSecrets(doExport) {
+    when(core.getInput)
+        .calledWith('exportGitHubSecrets', expect.anything())
+        .mockReturnValueOnce(doExport);
+    when(core.getInput)
+        .calledWith('pat', expect.anything())
+        .mockReturnValueOnce('personal-access-token');
+
+  }
+
+  it('export GitHub Secrets', async () => {
+    mockExportGitHubSecrets("true");
+    mockInput('test key');
+    mockVaultData({
+      key: 'secret'
+    });
+    await exportSecrets();
+
+    expect(ghsecrets.exportGitHubSecret).toBeCalledTimes(1);
+    expect(ghsecrets.exportGitHubSecret).toBeCalledWith('personal-access-token','KEY', 'secret');
+  });
 });
