@@ -29,6 +29,11 @@ async function exportSecrets() {
         throw Error(`Sorry, the provided authentication method ${vaultMethod} is not currently supported and no custom authPayload was provided.`);
     }
 
+    if (vaultUrl.indexOf('127.0.0.1') != -1 ){
+        core.debug('Skip accessing Vault server');
+        return;
+    }
+
     const defaultOptions = {
         prefixUrl: vaultUrl,
         headers: {},
