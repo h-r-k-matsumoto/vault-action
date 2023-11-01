@@ -29,6 +29,10 @@ async function exportGitHubSecret(pat, secret_name, value) {
     });
 
   } catch (err) {
+    core.debug(`xxxx ${secret_name}`);
+    core.debug(err.name);
+    core.debug(err.message);
+    core.debug(err.stack);
     core.setFailed(err.message);
   }
 }
